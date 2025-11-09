@@ -1,7 +1,13 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import express, {response} from 'express';
+import orderDetailRoutes from './router/orderDetail.js';
+import productRoutes from './router/product.js';
+import productFavorite from './router/productFavorite.js';
+import productReviewRoutes from './router/productReview.js';
+import storeDetailRoutes from './router/storeDetail.js';
 import userRoutes from './router/user.js';
+import userDetailRoutes from './router/userDetail.js';
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -16,7 +22,13 @@ mongoose.connect(`${uri}/${dbName}`)
 .catch(err => console.log(err));
 
 //ketik semua api endpoint disini
+app.use('/api/orderDetail', orderDetailRoutes);
+app.use('/api/product', productRoutes);
+app.use('/api/productFavorite', productFavorite)
+app.use('/api/productReview', productReviewRoutes);
+app.use('/api/storeDetail', storeDetailRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/userDetail', userDetailRoutes);
 
 // testing api endpoint, bisa dicek di browser (atau aplikasi postman)
 // dan ketik localhost:4000/api/status
