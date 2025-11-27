@@ -1,6 +1,9 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import express, {response} from 'express';
+import cartRoutes from './router/cart.js';
+import expeditionRoutes from './router/expedition.js';
+import orderRoutes from './router/order.js';
 import orderDetailRoutes from './router/orderDetail.js';
 import productRoutes from './router/product.js';
 import productFavorite from './router/productFavorite.js';
