@@ -25,6 +25,9 @@ mongoose.connect(`${uri}/${dbName}`)
 .catch(err => console.log(err));
 
 //ketik semua api endpoint disini
+app.use('/api/cart', cartRoutes);
+app.use('/api/expedition', expeditionRoutes);
+app.use('/api/orders', orderRoutes);
 app.use('/api/orderDetail', orderDetailRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/productFavorite', productFavorite)
