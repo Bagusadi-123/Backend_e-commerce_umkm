@@ -3,30 +3,35 @@ import ProductFavorite from '../model/productFavorite.js';
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-    const productFavorite = await ProductFavorite.find();
+router.get('/id/:id', getFavoritePerUser);
+router.post('/', addFavorite);
+router.delete('/', removeFavorite);
+
+// ambil favorit per user (id user)
+async function getFavoritePerUser(req, res) {
+    const productFavorite = await ProductFavorite.find({'user': req.params.id}).populate('product').exec();
     res.status(200).send(productFavorite);
-});
+}
 
-router.post('/', async (req, res) => {
-    const {product, count} = req.body;
-    console.log(req.body);
-
-    const productFavoriteInsert = new productFavorite({
+// tambah favorit
+async function addFavorite(req, res) {
+    const {user, product} = req.body;
+    const productFavoriteInsert = new ProductFavorite({
+        user: user,
         product: product,
-        price:  price,
 
     });
     const insert = productFavoriteInsert.save();
-    console.log(insert);
     res.status(200).send(insert);
-});
+}
 
-router.delete('/:id', async (req, res) => {
-    const productFavorite = await productFavorite.findByIdAndDelete(req.params.id, req.body)
+// hapus favorit
+async function removeFavorite(req, res) {
+    const {user, product} = req.body;
+    const prod = await ProductFavorite.findOneAndUpdate({'user': user, 'product': product}, {deleted: true}).exec();
     res.status(200).send({
         'status': true,
-        'data': productFavorite
     });
-});
+}
+
 export default router;

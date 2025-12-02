@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => { 
     const { name } = req.body;
     console.log(req.body);
-    const expeditionInsert = new Expedition({ 
+    const expeditionInsert = new Expedition({
         name: name
     });
     const insert = await expeditionInsert.save();

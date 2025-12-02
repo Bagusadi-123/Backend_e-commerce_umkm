@@ -1,21 +1,22 @@
 import express from 'express';
 import Cart from '../model/cart.js';
+import ProductFavorite from "../model/productFavorite.js";
 
 const router = express.Router();
 
-// ambil semua data user (untuk admin sepertinya)
-router.get('/', async (req, res) => {
-    const cart = await Cart.find();
+// ambil data keranjang per user
+router.get('/id/:id', async (req, res) => {
+    const cart = await Cart.find({'user': req.params.id}).populate('product').exec();
     res.status(200).send(cart);
 });
 
 // buat data keranjang baru, register
 router.post('/', async (req, res) => {
-    const { product_id, qty, total } = req.body;
+    const {user, product} = req.body;
     const cartInsert = new Cart({
-        product_id: product_id,
-        qty: qty,
-        total: total,
+        user: user,
+        product: product,
+        qty: 1,
     });
     const insert = await cartInsert.save()
     console.log(insert);
@@ -24,15 +25,21 @@ router.post('/', async (req, res) => {
 
 // update data user
 router.put('/:id', async (req, res) => {
-    const cart = await Cart.findByIdAndUpdate(req.params.id, req.body,{})
+    const {user, product, qty} = req.body;
+    const cart = await Cart.findByIdAndUpdate(req.params.id, {
+        user: user,
+        product: product,
+        qty: qty,
+    }).exec();
     res.status(200).send({
-        'status': true,
-        'data': cart
+        'status': true
     });
 });
 
-router.delete('/:id', async (req, res) => { 
-    const users = await Cart.findByIdAndDelete(req.params.id, req.body) 
+router.delete('/', async (req, res) => {
+    const {user, product, qty} = req.body;
+    const prod = await ProductFavorite.findOneAndUpdate({'user': user, 'product': product}, {deleted: true}).exec();
+    const users = await Cart.findByIdAndDelete({'user': user, 'product': product}, {deleted: true}).exec();
     res.status(200).send({
         'status': true,
         'data': users
