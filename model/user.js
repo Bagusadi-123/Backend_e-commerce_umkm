@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    nama: {type: String, require: true},
+    username: {type: String, require: true},
     email: {type: String, require: true, unique: true},
-    alamat: {type: String, require: true},
-});
+    password: {type: String, require: true},
+    role: {type: String, require: true},
+    created_at: {type: Date, default: Date.now},
+    updated_at: {type: Date, default: Date.now},
+    deleted: {type: Boolean, default: false},
+}, {versionKey: false});
 
-export default mongoose.model("user", userSchema); 
-
-
-
+export default mongoose.model('user', userSchema);
