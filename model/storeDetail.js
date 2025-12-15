@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const storeDetailSchema = new mongoose.Schema({
-    user_name: {type: mongoose.Schema.Types.ObjectId, ref: 'user'},
+    user: {type: mongoose.Schema.Types.ObjectId, ref: 'user'},
     store: {type: String, require: true, unique: true},
     store_desc: {type: String, require: true},
     photo_path: {type: String, require: true},
