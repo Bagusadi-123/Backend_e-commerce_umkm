@@ -10,7 +10,7 @@ router.get('/id/:id', async (req, res) => {
     res.status(200).send(cart);
 });
 
-// buat data keranjang baru, register
+// tambah data keranjang baru
 router.post('/', async (req, res) => {
     const {user, product} = req.body;
     const cartInsert = new Cart({
@@ -23,27 +23,24 @@ router.post('/', async (req, res) => {
     res.status(200).send(insert);
 });
 
-// update data user
+// update data keranjang
 router.put('/:id', async (req, res) => {
-    const {user, product, qty} = req.body;
+    const {qty} = req.body;
     const cart = await Cart.findByIdAndUpdate(req.params.id, {
-        user: user,
-        product: product,
         qty: qty,
     }).exec();
     res.status(200).send({
-        'status': true
+        'status': true, 'data': cart
     });
 });
 
-router.delete('/', async (req, res) => {
-    const {user, product, qty} = req.body;
-    const prod = await ProductFavorite.findOneAndUpdate({'user': user, 'product': product}, {deleted: true}).exec();
-    const users = await Cart.findByIdAndDelete({'user': user, 'product': product}, {deleted: true}).exec();
+router.delete('/:id', async (req, res) => {
+    console.log(req.params.id);
+    const users = await Cart.findByIdAndDelete(req.params.id).exec();
     res.status(200).send({
         'status': true,
         'data': users
     });
 });
 
-export default router;
+export default router;export default router;
