@@ -27,7 +27,7 @@ router.post('/', uploadHandler, async (req, res) => {
         const webPath = await processImage("profile", req.file.path, finalName);
 
         const storeDetailInsert = new StoreDetail({
-            user_id: user_id,
+            user: user_id,
             store: store_name,
             store_desc: store_desc,
             photo_path: webPath
