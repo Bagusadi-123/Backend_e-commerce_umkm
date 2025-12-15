@@ -34,8 +34,8 @@ router.get('/id/:id', async (req, res) => {
 });
 
 // buat order baru
-router.post('/', async (req, res) => {
-    const {store_id, user_id, qty, price, total, payment_method, order_detail} = req.body;
+router.post('/new', async (req, res) => {
+    const {store_id, user_id, qty, price, total, payment_method, expedition_courier} = req.body;
     console.log(req.body);
     const orderInsert = new Order({
         store: store_id,
@@ -46,12 +46,22 @@ router.post('/', async (req, res) => {
         order_status: orderStatus.BELUM_BAYAR,
         waybill: `order${user_id}-${Date.now()}`,
         payment_method: payment_method,
+        expedition_courier: expedition_courier,
     });
     const insert = await orderInsert.save();
+
+    console.log(insert);
+    res.status(200).send(insert);
+});
+
+// simpan order detail
+router.post('/detail', async (req, res) => {
+    const {order_id, order_detail} = req.body;
+    const order = await Order.findById(order_id).exec();
     let idList = [];
     for (let i = 0; i < order_detail.length; i++) {
         const od = new OrderDetail({
-            order: orderInsert._id,
+            order: order_id,
             product: order_detail[i].product,
             qty: order_detail[i].qty
         });
@@ -59,15 +69,32 @@ router.post('/', async (req, res) => {
         idList.push(od._id);
     }
 
-    orderInsert.order_detail.splice(0, 0, ...idList);
-    await orderInsert.save();
+    order.order_detail.splice(0, 0, ...idList);
+    await order.save();
+});
 
-    console.log(insert);
-    res.status(200).send(insert);
+//update data payment
+router.post('/:id', async (req, res) => {
+    const {payment_status} = req.body;
+    const orders = await Order.findByIdAndUpdate(req.params.id, {payment_status: payment_status}, {})
+    res.status(200).send({
+        'status': true,
+        'data': orders
+    });
+});
+
+//update data ekspedisi
+router.post('/status/:id', async (req, res) => {
+    const {order_status} = req.body;
+    const orders = await Order.findByIdAndUpdate(req.params.id, {order_status: order_status}, {})
+    res.status(200).send({
+        'status': true,
+        'data': orders
+    });
 });
 
 // update data order (sepertinya tidak dipakai)
-router.put('/:id', async (req, res) => {
+router.post('/:id', async (req, res) => {
     res.status(501).send('not implemented');
     // const orders = await Order.findByIdAndUpdate(req.params.id, req.body, {})
     // res.status(200).send({
@@ -86,4 +113,4 @@ router.delete('/:id', async (req, res) => {
     // });
 });
 
-export default router;
+export default router;export default router;
