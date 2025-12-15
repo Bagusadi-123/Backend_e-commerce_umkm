@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
 router.post('/register', async (req, res) => {
     try {
         //mengambil data dari body permintaan(postman / website)
-        const {username, email, password, role, created_at, updated_at, deleted} = req.body;
+        const {username, email, password, role} = req.body;
         console.log(req.body);
         //Buat objek data baru sesuai dengan Skema Mongoose
         const userInsert = new User({
@@ -37,9 +37,6 @@ router.post('/register', async (req, res) => {
             email: email,
             password: password,
             role: role,
-            created_at: created_at,
-            updated_at: updated_at,
-            deleted: deleted,
         });
         const insert = await userInsert.save();
         console.log(insert);
@@ -54,7 +51,6 @@ router.post('/register', async (req, res) => {
         });
     }
 });
-
 
 // update data user
 router.put('/:id', async (req, res) => {
