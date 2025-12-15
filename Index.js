@@ -12,6 +12,9 @@ import ProductFavorite from "./model/productFavorite.js";
 import ProductReviewRoutes from './router/productReview.js';
 import StoreDetailRoutes from './router/storeDetail.js';
 import path from "path";
+import orderStatus from "./model/constant.js";
+import Order from "./model/order.js";
+import OrderDetail from "./model/orderDetail.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -25,6 +28,11 @@ app.use(express.urlencoded({extended: true}));
 mongoose.connect(`${uri}/${dbName}`)
     .then(() => console.log('MongoDB Connected'))
     .catch(err => console.log(err));
+
+app.use((req, res, next) => {
+    console.log(`[${req.method}] ${req.originalUrl}`);
+    next();
+});
 
 //ketik semua api endpoint disini
 app.use('/api/user', userRoutes);
@@ -44,6 +52,7 @@ app.use('/storage', express.static(path.resolve(process.cwd(), 'storage')));
 // testing api endpoint, bisa dicek di browser (atau aplikasi postman)
 // dan ketik localhost:4000/api/status
 app.get('/api/status', async (req, res) => {
+
     res.send({
         "status": "koneksi berhasil",
     });
